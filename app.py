@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 import requests 
-from utils import word_embed
+from utils import word_embed, highlight
 from scipy.spatial.distance import cosine
 from transformers import BertTokenizer, BertModel
 
@@ -43,11 +43,20 @@ def main():
             link = r['url']
             title = r['title']
             ltitle = title.lower()
-            if (keyword.lower() in ltitle):
+            if (keyword.lower() in title.lower()):
               title_embed = word_embed(title,keyword,model, tokenizer)
-              if (1-cosine(context_embed,title_embed)>threshold):
-                st.write(title)
-                st.write(link)
+              similarity=(1-cosine(context_embed,title_embed))
+              if (similarity>threshold):
+                index = title.lower().find(keyword.lower())
+                before = title[:index]
+                key = title[index:index+len(keyword)]
+                after = title[index+len(keyword):]
+                r,g,b=highlight(similarity)
+                st.markdown("<style>.before{background-color:0;margin:0; display:inline;}</style>",unsafe_allow_html=True)
+                st.markdown("<style>.after{background-color:0;margin:0; display:inline;}</style>",unsafe_allow_html=True)
+                first = "<div><p class=before>{}</p><a style = 'background-color:".format(before)
+                st.markdown(first+"rgb({},{},{});'>{}</a><p class=after>{}</p></div>".format(r,g,b,keyword,after), unsafe_allow_html=True)
+                st.markdown("<a href={}>read more</a>".format(link),unsafe_allow_html=True)
     else:
       st.write('keyword missing in text')
 
