@@ -3,8 +3,8 @@ from scipy.spatial.distance import cosine
 
 def highlight(sim):
   r = 245
-  g = (129*(sim-0.9)/-0.4)+4
-  b = (82*(sim-0.9)/-0.4)+88
+  g = (129*(sim-0.9)/-0.3)+4
+  b = (82*(sim-0.9)/-0.3)+88
   return r,g,b
 
 def word_embed(text, word, model, tokenizer):

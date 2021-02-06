@@ -2,7 +2,6 @@ import streamlit as st
 import time
 import requests 
 from utils import word_embed, highlight
-from scipy.spatial.distance import cosine
 from transformers import BertTokenizer, BertModel
 
 
@@ -31,7 +30,7 @@ def main():
     if(keyword.lower() in context.lower()):
       model,tokenizer = load_model()
       context_embed = word_embed(context, keyword, model, tokenizer)
-      with st.spinner('Wait for it...'):
+      with st.spinner('searching...'):
         base_url = 'https://hacker-news.firebaseio.com/v0/' 
         end_url = '.json?print=pretty'
         ids_url = ''.join([base_url,category,'stories',end_url])
@@ -42,7 +41,6 @@ def main():
           if 'url' in r.keys():
             link = r['url']
             title = r['title']
-            ltitle = title.lower()
             if (keyword.lower() in title.lower()):
               title_embed = word_embed(title,keyword,model, tokenizer)
               similarity=(1-cosine(context_embed,title_embed))
