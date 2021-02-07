@@ -1,8 +1,10 @@
 import streamlit as st
 import time
+import re
 import requests 
 from utils import word_embed, highlight
 from transformers import BertTokenizer, BertModel
+from scipy.spatial.distance import cosine
 
 
 threshold = st.sidebar.slider(
@@ -23,7 +25,7 @@ def load_model():
 def main():
   st.markdown("<h1 style='text-align: center; color: rgb(246, 51, 102);'>trackHN</h1>", unsafe_allow_html=True)	
   st.markdown("<p style='text-align: center;'>track HackerNews, with sense</p>",unsafe_allow_html=True)
-  keyword = ' '+st.text_input("")
+  keyword = st.text_input("")
   context = st.text_area("sample text")
   search = st.button("go")
   if search:
@@ -41,11 +43,12 @@ def main():
           if 'url' in r.keys():
             link = r['url']
             title = r['title']
-            if (keyword.lower() in title.lower()):
+            match = (re.search(r'\b'+keyword+r'\b',title,flags=re.IGNORECASE))
+            if match:
+              index = match.start()
               title_embed = word_embed(title,keyword,model, tokenizer)
               similarity=(1-cosine(context_embed,title_embed))
               if (similarity>threshold):
-                index = title.lower().find(keyword.lower())
                 before = title[:index]
                 key = title[index:index+len(keyword)]
                 after = title[index+len(keyword):]
@@ -53,7 +56,7 @@ def main():
                 st.markdown("<style>.before{background-color:0;margin:0; display:inline;}</style>",unsafe_allow_html=True)
                 st.markdown("<style>.after{background-color:0;margin:0; display:inline;}</style>",unsafe_allow_html=True)
                 first = "<div><p class=before>{}</p><a style = 'background-color:".format(before)
-                st.markdown(first+"hsl({},{}%,{}%);'>{}</a><p class=after>{}</p></div>".format(r,g,b,keyword,after), unsafe_allow_html=True)
+                st.markdown(first+"hsl({},{}%,{}%);'>{}</a><p class=after>{}</p></div>".format(r,g,b,key,after), unsafe_allow_html=True)
                 st.markdown("<a href={}>read more</a>".format(link),unsafe_allow_html=True)
     else:
       st.write('keyword missing in text')

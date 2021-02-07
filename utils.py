@@ -1,5 +1,4 @@
 import torch
-from scipy.spatial.distance import cosine
 
 def highlight(sim):
   r = 345
