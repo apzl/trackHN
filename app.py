@@ -53,7 +53,7 @@ def main():
                 st.markdown("<style>.before{background-color:0;margin:0; display:inline;}</style>",unsafe_allow_html=True)
                 st.markdown("<style>.after{background-color:0;margin:0; display:inline;}</style>",unsafe_allow_html=True)
                 first = "<div><p class=before>{}</p><a style = 'background-color:".format(before)
-                st.markdown(first+"hsl({},{},{});'>{}</a><p class=after>{}</p></div>".format(r,g,b,keyword,after), unsafe_allow_html=True)
+                st.markdown(first+"hsl({},{}%,{}%);'>{}</a><p class=after>{}</p></div>".format(r,g,b,keyword,after), unsafe_allow_html=True)
                 st.markdown("<a href={}>read more</a>".format(link),unsafe_allow_html=True)
     else:
       st.write('keyword missing in text')
