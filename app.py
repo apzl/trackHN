@@ -7,9 +7,9 @@ from transformers import BertTokenizer, BertModel
 
 threshold = st.sidebar.slider(
     'similarity',
-    0.4, 0.99, (0.6)
+    0.1, 0.99, (0.6)
 )
-category = st.sidebar.radio('category',['new','top','best'])
+category = st.sidebar.radio('category',['new','top','best'])    
 
 @st.cache
 def load_model():
@@ -23,7 +23,7 @@ def load_model():
 def main():
   st.markdown("<h1 style='text-align: center; color: rgb(246, 51, 102);'>trackHN</h1>", unsafe_allow_html=True)	
   st.markdown("<p style='text-align: center;'>track HackerNews, with sense</p>",unsafe_allow_html=True)
-  keyword = st.text_input("")
+  keyword = ' '+st.text_input("")
   context = st.text_area("sample text")
   search = st.button("go")
   if search:
@@ -49,11 +49,11 @@ def main():
                 before = title[:index]
                 key = title[index:index+len(keyword)]
                 after = title[index+len(keyword):]
-                r,g,b=highlight(similarity)
+                r,g,b=highlight(similarity)              #calculate the intensity of keyword highlighting
                 st.markdown("<style>.before{background-color:0;margin:0; display:inline;}</style>",unsafe_allow_html=True)
                 st.markdown("<style>.after{background-color:0;margin:0; display:inline;}</style>",unsafe_allow_html=True)
                 first = "<div><p class=before>{}</p><a style = 'background-color:".format(before)
-                st.markdown(first+"rgb({},{},{});'>{}</a><p class=after>{}</p></div>".format(r,g,b,keyword,after), unsafe_allow_html=True)
+                st.markdown(first+"hsl({},{},{});'>{}</a><p class=after>{}</p></div>".format(r,g,b,keyword,after), unsafe_allow_html=True)
                 st.markdown("<a href={}>read more</a>".format(link),unsafe_allow_html=True)
     else:
       st.write('keyword missing in text')
