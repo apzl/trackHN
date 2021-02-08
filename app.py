@@ -35,8 +35,9 @@ def load_model():
 def main():
   st.markdown("<h1 style='text-align: center; color: rgb(246, 51, 102);'>trackHN</h1>", unsafe_allow_html=True)	
   st.markdown("<p style='text-align: center;'>track HackerNews, with sense</p>",unsafe_allow_html=True)
-  keyword = st.text_input("")
+  keyword = st.text_input("search keyword")
   context = st.text_area("sample text")
+  st.write("give text having keyword in the needed context")
   search = st.button("go")
 
 
