@@ -37,11 +37,11 @@ def word_embed(text, word, model, tokenizer):
       #add the last four layers
       sum_vec = torch.sum(token[-4:], dim=0)
       token_vecs_sum.append(sum_vec)
-    for i, token_str in enumerate(tokenized_text):
-      if (token_str == word):
-        index=i
+      for i, token_str in enumerate(tokenized_text):
+        if (token_str == word):
+          index=i
     #return the vector for keyword 
-    return token_vecs_sum[index]
+  return token_vecs_sum[index]
 
 
 
