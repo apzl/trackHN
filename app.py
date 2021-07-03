@@ -59,29 +59,30 @@ def main():
         for id in ids.json():
           url = ''.join([base_url,'item/',str(id),end_url])
           r = requests.get(url).json()
-          if 'url' in r.keys():
-            link = r['url']
-            title = r['title']
-            match = (re.search(r'\b'+keyword+r'\b',title,flags=re.IGNORECASE))
-            if match:
-              index = match.start() 
-              #gets embedding for keyword in search result                                          
-              title_embed = word_embed(title,keyword,model, tokenizer)        
-              similarity=(1-cosine(context_embed,title_embed))
-              if (similarity>threshold):
-                before = title[:index]
-                key = title[index:index+len(keyword)]
-                after = title[index+len(keyword):]
-                #calculate the intensity of keyword highlighting
-                h,s,l=highlight(similarity)                                   
-                
-                
-                #formatting output text                                
-                st.markdown("<style>.before{background-color:0;margin:0; display:inline;}</style>",unsafe_allow_html=True)
-                st.markdown("<style>.after{background-color:0;margin:0; display:inline;}</style>",unsafe_allow_html=True)
-                first = "<div><p class=before>{}</p><a style = 'background-color:".format(before)
-                st.markdown(first+"hsl({},{}%,{}%);'>{}</a><p class=after>{}</p></div>".format(h,s,l,key,after), unsafe_allow_html=True)
-                st.markdown("<a href={}>read more</a>".format(link),unsafe_allow_html=True)
+          if (r):
+            if 'url' in r.keys():
+              link = r['url']
+              title = r['title']
+              match = (re.search(r'\b'+keyword+r'\b',title,flags=re.IGNORECASE))
+              if match:
+                index = match.start() 
+                #gets embedding for keyword in search result                                          
+                title_embed = word_embed(title,keyword,model, tokenizer)        
+                similarity=(1-cosine(context_embed,title_embed))
+                if (similarity>threshold):
+                  before = title[:index]
+                  key = title[index:index+len(keyword)]
+                  after = title[index+len(keyword):]
+                  #calculate the intensity of keyword highlighting
+                  h,s,l=highlight(similarity)                                   
+                  
+                  
+                  #formatting output text                                
+                  st.markdown("<style>.before{background-color:0;margin:0; display:inline;}</style>",unsafe_allow_html=True)
+                  st.markdown("<style>.after{background-color:0;margin:0; display:inline;}</style>",unsafe_allow_html=True)
+                  first = "<div><p class=before>{}</p><a style = 'background-color:".format(before)
+                  st.markdown(first+"hsl({},{}%,{}%);'>{}</a><p class=after>{}</p></div>".format(h,s,l,key,after), unsafe_allow_html=True)
+                  st.markdown("<a href={}>read more</a>".format(link),unsafe_allow_html=True)
     
     
     else:
